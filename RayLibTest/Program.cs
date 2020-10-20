@@ -1,5 +1,6 @@
 ﻿using System;
 using Raylib_cs;
+using System.Collections.Generic;
 
 namespace RayLibTest
 {
@@ -12,6 +13,8 @@ namespace RayLibTest
             Color myColor = new Color(0, 255, 128, 255);
 
             Random generator = new Random();
+
+            Queue<Rectangle> playerQueue = new Queue<Rectangle>();
 
             float x = 400;
             float y = 300;
@@ -26,7 +29,10 @@ namespace RayLibTest
             while (!Raylib.WindowShouldClose())
             {
                 Raylib.DrawRectangleRec(fruit, Color.RED);
-                Raylib.DrawRectangleRec(player, Color.SKYBLUE);
+                foreach (Rectangle rect in playerQueue)
+                {
+                    Raylib.DrawRectangleRec(rect, Color.SKYBLUE);
+                }
 
                 while (oneFruit == false || fruit.y >= 595 || fruit.x >= 795 || fruit.x <= 5 || fruit.y <= 5)//Checks if the fruit is in the visable area, if not, try again.
                 {
@@ -84,9 +90,9 @@ namespace RayLibTest
                         fruitY = generator.Next(5, 595);
                         oneFruit = true;
                     }
+                    playerQueue.Enqueue();
                     isOverlapping = false;
                 }
-
                 Raylib.EndDrawing();
             }
 
