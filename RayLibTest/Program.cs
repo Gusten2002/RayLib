@@ -39,17 +39,14 @@ namespace RayLibTest
                 {
                     player.x += 0.07f;
                 }
-
                 if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT)) //Moves "player" left
                 {
                     player.x -= 0.07f;
                 }
-
                 if (Raylib.IsKeyDown(KeyboardKey.KEY_UP)) //Moves "player" up
                 {
                     player.y -= 0.07f;
                 }
-
                 if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN)) //Moves "player" downwards
                 {
                     player.y += 0.07f;
@@ -58,10 +55,6 @@ namespace RayLibTest
                 Raylib.BeginDrawing(); //Börjar rita
 
                 Raylib.ClearBackground(myColor); //Backgroundcolor
-
-                // Raylib.DrawRectangle((int)fruitX, (int)fruitY, 15, 15, Color.RED); //Fruit
-
-                // Raylib.DrawRectangle((int)x, (int)y, 20, 20, Color.PINK); //Player
 
                 if (player.x >= 791) //Checks player position Right side, tp to back to Left side(portal)
                 {
