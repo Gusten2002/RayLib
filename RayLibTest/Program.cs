@@ -15,61 +15,83 @@ namespace RayLibTest
 
             float x = 400;
             float y = 300;
+
             float fruitX = 50;
             float fruitY = 50;
             bool oneFruit = false;
 
-            while(!Raylib.WindowShouldClose())
+            Rectangle fruit = new Rectangle((int)fruitX, (int)fruitY, 15, 15);
+            Rectangle player = new Rectangle((int)x, (int)y, 20, 20);
+
+            while (!Raylib.WindowShouldClose())
             {
-                while(oneFruit == false || fruitY >= 570 || fruitX >= 770 || fruitX <= 30 || fruitY <= 30)
+                Raylib.DrawRectangleRec(fruit, Color.RED);
+                Raylib.DrawRectangleRec(player, Color.SKYBLUE);
+
+                while (oneFruit == false || fruit.y >= 595 || fruit.x >= 795 || fruit.x <= 5 || fruit.y <= 5)//Checks if the fruit is in the visable area, if not, try again.
                 {
-                    fruitX = generator.Next(30, 770);
-                    fruitY = generator.Next(30, 570);
+                    fruit.x = generator.Next(5, 795);
+                    fruit.y = generator.Next(5, 595);
                     oneFruit = true;
                 }
-                if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
+
+                if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT)) //Moves "player" right
                 {
-                    x += 0.1f;
+                    player.x += 0.07f;
                 }
 
-                if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
+                if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT)) //Moves "player" left
                 {
-                    x -= 0.1f;
+                    player.x -= 0.07f;
                 }
 
-                if (Raylib.IsKeyDown(KeyboardKey.KEY_UP))
+                if (Raylib.IsKeyDown(KeyboardKey.KEY_UP)) //Moves "player" up
                 {
-                    y -= 0.1f;
+                    player.y -= 0.07f;
                 }
 
-                if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN))
+                if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN)) //Moves "player" downwards
                 {
-                    y += 0.1f;
+                    player.y += 0.07f;
                 }
 
-                Raylib.BeginDrawing();
+                Raylib.BeginDrawing(); //Börjar rita
 
-                Raylib.ClearBackground(myColor);
+                Raylib.ClearBackground(myColor); //Backgroundcolor
 
-                Raylib.DrawCircle((int)fruitX, (int)fruitY, 9, Color.RED);
+                // Raylib.DrawRectangle((int)fruitX, (int)fruitY, 15, 15, Color.RED); //Fruit
 
-                Raylib.DrawRectangle((int)x, (int)y, 20, 20, Color.PINK);
+                // Raylib.DrawRectangle((int)x, (int)y, 20, 20, Color.PINK); //Player
 
-                if(x >= 791)
+                if (player.x >= 791) //Checks player position Right side, tp to back to Left side(portal)
                 {
-                    x = -10;
+                    player.x = -10;
                 }
-                if(x <= -11)
+                if (player.x <= -11) //Checks player position Left side, tp to back to Right side(portal)
                 {
-                    x = 790;
+                    player.x = 790;
                 }
-                if(y >=  591)
+                if (player.y >= 591) //Checks player position Right side, tp to back to Left side(portal)
                 {
-                    y = -10;
+                    player.y = -10;
                 }
-                if(y <= -11)
+                if (player.y <= -11) //Checks player position Left side, tp to back to Right side(portal)
                 {
-                    y = 590;
+                    player.y = 590;
+                }
+
+                bool isOverlapping = Raylib.CheckCollisionRecs(player, fruit);
+
+                if (isOverlapping == true)
+                {
+                    oneFruit = false;
+                    while (oneFruit == false && fruit.y >= 595 && fruit.x >= 795 && fruit.x <= 5 && fruit.y <= 5)//Checks if the fruit is in the visable area, if not, try again.
+                    {
+                        fruitX = generator.Next(5, 795);
+                        fruitY = generator.Next(5, 595);
+                        oneFruit = true;
+                    }
+                    isOverlapping = false;
                 }
 
                 Raylib.EndDrawing();
