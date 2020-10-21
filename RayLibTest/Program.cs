@@ -24,7 +24,14 @@ namespace RayLibTest
             bool oneFruit = false;
 
             Rectangle fruit = new Rectangle((int)fruitX, (int)fruitY, 15, 15);
-            Rectangle player = new Rectangle((int)x, (int)y, 20, 20);
+            Rectangle playerHead = new Rectangle((int)x, (int)y, 20, 20);
+
+            playerQueue.Enqueue(playerHead);
+
+            int moveTimer = 0;
+            int moveTimerMax = 7;
+
+            Raylib.SetTargetFPS(60);
 
             while (!Raylib.WindowShouldClose())
             {
@@ -32,6 +39,7 @@ namespace RayLibTest
                 foreach (Rectangle rect in playerQueue)
                 {
                     Raylib.DrawRectangleRec(rect, Color.SKYBLUE);
+                    Raylib.DrawRectangleLines((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height, Color.BLACK);
                 }
 
                 while (oneFruit == false || fruit.y >= 595 || fruit.x >= 795 || fruit.x <= 5 || fruit.y <= 5)//Checks if the fruit is in the visable area, if not, try again.
@@ -41,48 +49,83 @@ namespace RayLibTest
                     oneFruit = true;
                 }
 
-                if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT)) //Moves "player" right
+                moveTimer -= 1;
+
+                if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) && moveTimer < 0) //Moves "player" right
                 {
-                    player.x += 0.07f;
+                    x += 20;
+                    // player.x += 0.07f;
+                    Rectangle popper = playerQueue.Dequeue();
+                    popper.x = x;
+                    popper.y = y;
+
+                    playerQueue.Enqueue(popper);
+                    playerHead = popper;
+                    moveTimer = moveTimerMax;
                 }
-                if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT)) //Moves "player" left
+                else if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) && moveTimer < 0) //Moves "player" left
                 {
-                    player.x -= 0.07f;
+                    x -= 20;
+                    // player.x -= 0.07f;
+                    Rectangle popper = playerQueue.Dequeue();
+                    popper.x = x;
+                    popper.y = y;
+
+                    playerHead = popper;
+                    playerQueue.Enqueue(popper);
+                    moveTimer = moveTimerMax;
                 }
-                if (Raylib.IsKeyDown(KeyboardKey.KEY_UP)) //Moves "player" up
+                else if (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && moveTimer < 0) //Moves "player" up
                 {
-                    player.y -= 0.07f;
+                    y -= 20;
+                    // player.y -= 0.07f;
+                    Rectangle popper = playerQueue.Dequeue();
+                    popper.x = x;
+                    popper.y = y;
+
+                    playerHead = popper;
+                    playerQueue.Enqueue(popper);
+                    moveTimer = moveTimerMax;
                 }
-                if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN)) //Moves "player" downwards
+                else if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) && moveTimer < 0) //Moves "player" downwards
                 {
-                    player.y += 0.07f;
+                    y += 20;
+                    // player.y += 0.07f;
+                    Rectangle popper = playerQueue.Dequeue();
+                    popper.x = x;
+                    popper.y = y;
+
+                    playerHead = popper;
+                    playerQueue.Enqueue(popper);
+                    moveTimer = moveTimerMax;
                 }
 
                 Raylib.BeginDrawing(); //Börjar rita
 
                 Raylib.ClearBackground(myColor); //Backgroundcolor
 
-                if (player.x >= 791) //Checks player position Right side, tp to back to Left side(portal)
+                if (x >= 791) //Checks player position Right side, tp to back to Left side(portal)
                 {
-                    player.x = -10;
+                    x = -10;
                 }
-                if (player.x <= -11) //Checks player position Left side, tp to back to Right side(portal)
+                if (x <= -11) //Checks player position Left side, tp to back to Right side(portal)
                 {
-                    player.x = 790;
+                    x = 790;
                 }
-                if (player.y >= 591) //Checks player position Right side, tp to back to Left side(portal)
+                if (y >= 591) //Checks player position Right side, tp to back to Left side(portal)
                 {
-                    player.y = -10;
+                    y = -15;
                 }
-                if (player.y <= -11) //Checks player position Left side, tp to back to Right side(portal)
+                if (y <= -16) //Checks player position Left side, tp to back to Right side(portal)
                 {
-                    player.y = 590;
+                    y = 590;
                 }
 
-                bool isOverlapping = Raylib.CheckCollisionRecs(player, fruit);
+                bool isOverlapping = Raylib.CheckCollisionRecs(playerHead, fruit);
 
                 if (isOverlapping == true)
                 {
+                    // System.Console.WriteLine("OVERLAP!!!");
                     oneFruit = false;
                     while (oneFruit == false && fruit.y >= 595 && fruit.x >= 795 && fruit.x <= 5 && fruit.y <= 5)//Checks if the fruit is in the visable area, if not, try again.
                     {
@@ -90,7 +133,9 @@ namespace RayLibTest
                         fruitY = generator.Next(5, 595);
                         oneFruit = true;
                     }
-                    playerQueue.Enqueue();
+
+
+                    playerQueue.Enqueue(new Rectangle(x, y, 20, 20));
                     isOverlapping = false;
                 }
                 Raylib.EndDrawing();
