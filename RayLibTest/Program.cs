@@ -8,7 +8,7 @@ namespace RayLibTest
     {
         static void Main(string[] args)
         {
-            Raylib.InitWindow(800, 600, "Hello TE!");
+            Raylib.InitWindow(800, 600, "Snake");
 
             Color myColor = new Color(0, 255, 128, 255);
 
@@ -28,15 +28,15 @@ namespace RayLibTest
 
             playerQueue.Enqueue(playerHead);
 
-            int moveTimer = 0;
-            int moveTimerMax = 7;
+            int moveTimer = 0; //Start number for the timer
+            int moveTimerMax = 7; //Max number for the timer.
 
-            Raylib.SetTargetFPS(60);
+            Raylib.SetTargetFPS(60); //Locks the FPS to 60
 
             while (!Raylib.WindowShouldClose())
             {
-                Raylib.DrawRectangleRec(fruit, Color.RED);
-                foreach (Rectangle rect in playerQueue)
+                Raylib.DrawRectangleRec(fruit, Color.RED); //Draws a red ractangle fruit
+                foreach (Rectangle rect in playerQueue) //Draws every rectangle that the snake consists of
                 {
                     Raylib.DrawRectangleRec(rect, Color.SKYBLUE);
                     Raylib.DrawRectangleLines((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height, Color.BLACK);
@@ -49,7 +49,7 @@ namespace RayLibTest
                     oneFruit = true;
                 }
 
-                moveTimer -= 1;
+                moveTimer -= 1; //Timer goes back with -1
 
                 if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) && moveTimer < 0) //Moves "player" right
                 {
@@ -100,7 +100,7 @@ namespace RayLibTest
                     moveTimer = moveTimerMax;
                 }
 
-                Raylib.BeginDrawing(); //Börjar rita
+                Raylib.BeginDrawing(); //Starts drawing
 
                 Raylib.ClearBackground(myColor); //Backgroundcolor
 
@@ -133,7 +133,6 @@ namespace RayLibTest
                         fruitY = generator.Next(5, 595);
                         oneFruit = true;
                     }
-
 
                     playerQueue.Enqueue(new Rectangle(x, y, 20, 20));
                     isOverlapping = false;
