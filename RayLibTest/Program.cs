@@ -123,6 +123,7 @@ namespace RayLibTest
 
                 bool isOverlapping = Raylib.CheckCollisionRecs(playerHead, fruit);
 
+
                 if (isOverlapping == true)
                 {
                     // System.Console.WriteLine("OVERLAP!!!");
@@ -136,6 +137,22 @@ namespace RayLibTest
 
                     playerQueue.Enqueue(new Rectangle(x, y, 20, 20));
                     isOverlapping = false;
+                }
+
+                bool isColliding = false;
+
+                foreach (Rectangle rect in playerQueue)
+                {
+                    if (rect.x != playerHead.x && rect.y != playerHead.y && !isColliding)
+                    {
+                        isColliding = Raylib.CheckCollisionRecs(playerHead, rect);
+
+                    }
+                }
+
+                if (isColliding == true)
+                {
+                    Environment.Exit(0);
                 }
                 Raylib.EndDrawing();
             }
